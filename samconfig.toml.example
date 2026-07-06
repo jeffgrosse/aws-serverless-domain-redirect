@@ -1,0 +1,18 @@
+# Copy this file to samconfig.toml and fill in your own values, or just run
+# `sam deploy --guided` and let it write samconfig.toml for you.
+#
+# samconfig.toml is gitignored on purpose: your HostedZoneId and domain names
+# don't need to be committed, and this file is meant to be regenerated per
+# deployer/fork.
+
+version = 0.1
+
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "aws-serverless-domain-redirect"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+resolve_s3 = true
+parameter_overrides = "SourceDomain=\"jeffgrosse.com\" TargetUrl=\"https://www.linkedin.com/in/jeffreygrosse/\" HostedZoneId=\"ZXXXXXXXXXXXXX\" IncludeWww=\"true\""
