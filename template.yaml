@@ -13,14 +13,22 @@ Parameters:
     Description: >
       Apex domain to redirect from, e.g. jeffgrosse.com. Must match a domain
       you control in the hosted zone given by HostedZoneId.
+    AllowedPattern: '^[^''$]+$'
+    ConstraintDescription: >-
+      must not contain single quotes or $ characters -- both are spliced
+      via Fn::Sub into the CloudFront Function's JavaScript source (see
+      README)
 
   TargetUrl:
     Type: String
     Description: >
       Full URL to redirect to, e.g. https://www.linkedin.com/in/jeffreygrosse/.
       Must include the scheme (https://).
-    AllowedPattern: '^https://.+'
-    ConstraintDescription: must start with https://
+    AllowedPattern: '^https://[^''$]+$'
+    ConstraintDescription: >-
+      must start with https:// and must not contain single quotes or $
+      characters -- both are spliced via Fn::Sub into the CloudFront
+      Function's JavaScript source (see README)
 
   HostedZoneId:
     Type: AWS::Route53::HostedZone::Id

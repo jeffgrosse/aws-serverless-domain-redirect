@@ -33,6 +33,18 @@ reasoning behind each parameter and condition.
     until the NS swap has propagated.
   - If the zone is already delegated to Route 53, skip this step.
 
+## Validate the template
+
+Before running `sam deploy` (or before tagging a release if you've forked
+this), lint the template:
+
+```bash
+tests/validate.sh
+```
+
+This runs `sam validate --lint` against `template.yaml`. It does not
+require AWS credentials and does not create or modify any resources.
+
 ## Deploy
 
 This template must be deployed to **us-east-1**. CloudFront only accepts ACM
@@ -55,6 +67,16 @@ sam deploy --guided
 | `HostedZoneId` | `Z0123456789ABCDEFGHIJ` (find via `aws route53 list-hosted-zones`) |
 | `IncludeWww` | `true` |
 
+`SourceDomain` and `TargetUrl` may not contain single quotes (`'`) or dollar
+signs (`$`). Both values are spliced verbatim into the CloudFront Function's
+JavaScript source via CloudFormation's `Fn::Sub` (see `template.yaml`): a
+single quote would break out of the function's string literal, and a `$`
+(as in `${...}`) would be misread as an `Fn::Sub` variable reference. No
+valid HTTPS domain or redirect target needs either character. A rejected
+character fails CloudFormation's parameter validation with a clear error
+before deploy, rather than deploying and then failing at the CloudFront
+Function's JavaScript syntax check with an opaque error.
+
 Confirm the region prompt is `us-east-1`. Answers are saved to
 `samconfig.toml` (gitignored — see `samconfig.toml.example` for the format if
 you'd rather write it by hand and skip `--guided` on subsequent deploys).
@@ -62,7 +84,9 @@ you'd rather write it by hand and skip `--guided` on subsequent deploys).
 The stack takes a few minutes, mostly waiting on ACM DNS validation and
 CloudFront distribution propagation.
 
-## Verify
+## Verify the deployment
+
+(For template linting before you deploy, see "Validate the template" above.)
 
 Once the stack is `CREATE_COMPLETE`:
 
