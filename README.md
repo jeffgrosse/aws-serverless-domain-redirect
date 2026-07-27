@@ -1,5 +1,8 @@
 # aws-serverless-domain-redirect
 
+> [!NOTE]
+> **Provenance:** Extracted from PrediktSales infrastructure work. Reviewed, tested, and versioned before public release.
+
 A reusable AWS SAM template that redirects a custom domain (apex + optional
 `www`) to any target URL over HTTPS, using CloudFront + a CloudFront
 Function + ACM + Route 53. No S3 bucket, no Lambda@Edge, no servers.
